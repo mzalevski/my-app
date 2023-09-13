@@ -54,6 +54,16 @@ export default function App() {
     deviceAnalyticsId: "asdasd",
   };
 
+  const _onNavigationStateChange = (navState) => {
+    if (
+      !urlHistory.length ||
+      urlHistory[urlHistory.length - 1] !== navState.url
+    ) {
+      setUrlHistory((prev) => prev.concat(navState.url));
+      setCurrentUrl(navState.url);
+    }
+  };
+
   const jsToInject = `${arrayAtPolyfill}
   localStorage.setItem("analyticsId", "${
     root?.deviceAnalyticsId
@@ -76,6 +86,7 @@ export default function App() {
       style={{ flex: 1 }}
       source={{ uri: "https://jutromedical.com/sklep" }}
       injectedJavaScript={injectedJavaScript}
+      onNavigationStateChange={_onNavigationStateChange}
       injectedJavaScriptBeforeContentLoaded={
         user?.id ? jsToInject : arrayAtPolyfill
       }
